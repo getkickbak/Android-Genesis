@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #appPath="/Users/eric/Documents/Aptana Studio 3 Workspace/GetKickBak/public/javascripts/mobile";
-appPath="/Users/eric/Documents/GetKickBak/master/master/public/javascripts/mobile";
+appPath="/Users/eric/Documents/GetKickBak/V2.0.0/V2.0.0/public/javascripts/mobile";
 PROJECT_DIR="$1"
 
 libPath="lib/sencha-touch-2.1.0-commercial";
