@@ -22,8 +22,7 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/*android.js $PROJECT_DIR/www
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/*min.js $PROJECT_DIR/www/lib/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*nfc*.js $PROJECT_DIR/www/lib/core/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*.android.js $PROJECT_DIR/www/lib/core/
-rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*facebook*.js $PROJECT_DIR/www/lib/core/
-rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*fb-connect*.js $PROJECT_DIR/www/lib/core/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/Facebook*.js $PROJECT_DIR/www/lib/core/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/$libPath/sencha-touch-all.js $PROJECT_DIR/www/lib/
 #rsync -pvtrlL --delete --cvs-exclude "$appPath"/$libPath/src $PROJECT_DIR/www/$libPath
 

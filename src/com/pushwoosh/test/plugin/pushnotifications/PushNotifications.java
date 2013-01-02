@@ -56,9 +56,9 @@ public class PushNotifications extends Plugin
 		super.onResume(multitasking);
 
 		IntentFilter intentFilter =
-				new IntentFilter(cordova.getActivity().getPackageName() + ".action.PUSH_MESSAGE_RECEIVE");
+				new IntentFilter(ctx.getActivity().getPackageName() + ".action.PUSH_MESSAGE_RECEIVE");
 
-		cordova.getActivity().registerReceiver(mReceiver, intentFilter);
+		ctx.getActivity().registerReceiver(mReceiver, intentFilter);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class PushNotifications extends Plugin
 
 		try
 		{
-			cordova.getActivity().unregisterReceiver(mReceiver);
+			ctx.getActivity().unregisterReceiver(mReceiver);
 		}
 		catch (Exception e)
 		{
