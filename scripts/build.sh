@@ -29,5 +29,6 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/$libPath/sencha-touch-all.js $PR
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/css/android*.css $PROJECT_DIR/www/resources/css/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.mp3 $PROJECT_DIR/www/resources/audio/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.wav $PROJECT_DIR/www/resources/audio/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/themes/images/v1/*facebook* $PROJECT_DIR/www/resources/themes/images/v1/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/themes/images/v1/android/* $PROJECT_DIR/www/resources/themes/images/v1/android
 

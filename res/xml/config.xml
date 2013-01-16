@@ -24,8 +24,8 @@
      -->
     <!-- allow local pages -->
     <access origin="http://127.0.0.1*"/> <!-- allow local pages -->
-    <access origin="http://192.168.0.52"/>
-    <access origin="http://76.10.173.153"/> 
+    <access origin="http://192.168.0.52*"/>
+    <access origin="http://76.10.173.153*"/> 
     <access origin="https://*.pushwoosh.com" subdomains="true" />
     <access origin="http://*.devgetkickbak.com" subdomains="true" />
     <access origin="http://*.getkickbak.com" subdomains="true" />
@@ -51,7 +51,8 @@
    <plugin name="EbkPlugin" value="sdi.SSC.Ebk.EbkPlugin"/>
     -->    
    <plugin name="ProximityIDPlugin" value="com.getkickbak.plugin.ProximityIDPlugin"/>
-	<plugin name="Base64ToPNG" value="org.apache.cordova.Base64ToPNG"/>
+   <plugin name="NotificationPlugin" value="com.getkickbak.plugin.NotificationPlugin"/>
+   	<plugin name="Base64ToPNG" value="org.apache.cordova.Base64ToPNG"/>
 	<plugin name="WebIntent" value="com.borismus.webintent.WebIntent"/>
 	<plugin name="PushNotification" value="com.pushwoosh.test.plugin.pushnotifications.PushNotifications" onload="true"/>
     <plugin name="LowLatencyAudio" value="com.phonegap.PGLowLatencyAudio" />
@@ -76,5 +77,6 @@
     <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
     <plugin name="Echo" value="org.apache.cordova.Echo" />
     <plugin name="Globalization" value="org.apache.cordova.Globalization" />
+    <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser"/>
 </plugins>
 </cordova>

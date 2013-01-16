@@ -11,23 +11,17 @@
       -->
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <title>KickBak</title>
-      <link rel="stylesheet" type="text/css" media="only screen and (max-width:270px) and (-webkit-max-device-pixel-ratio: .75)" href="resources/css/android-phone-lhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (max-width:640px) and (-webkit-max-device-pixel-ratio: 1.0)" href="resources/css/android-phone-mxhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (max-width:540px) and (-webkit-max-device-pixel-ratio: 1.5)" href="resources/css/android-phone-lhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (max-width:1280px) and (-webkit-min-device-pixel-ratio: 2.0)" href="resources/css/android-phone-mxhdpi.css">
-      
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:271px) and (-webkit-max-device-pixel-ratio: .75)" href="resources/css/android-tablet-lhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:641px) and (-webkit-max-device-pixel-ratio: 1.0)" href="resources/css/android-tablet-mxhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:541px) and (-webkit-max-device-pixel-ratio: 1.5)" href="resources/css/android-tablet-lhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:1281px) and (-webkit-min-device-pixel-ratio: 2.0)" href="resources/css/android-tablet-mxhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (max-width:360px) and (-webkit-max-device-pixel-ratio: 0.75)" href="resources/css/android-phone-lhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (min-width:540px) and (-webkit-max-device-pixel-ratio: 1.0)" href="resources/css/android-phone-mxhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (min-width:360px) and (-webkit-max-device-pixel-ratio: 1.5)" href="resources/css/android-phone-lhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (min-width:640px) and (-webkit-min-device-pixel-ratio: 2.0)" href="resources/css/android-phone-mxhdpi.css">
       <!-- If your application is targeting iOS BEFORE 4.0 you MUST put json2.js from http://www.JSON.org/json2.js into your www
-      <script src="http://debug.phonegap.com/target/target-script-min.js#web2dot0"></script>
-      <script src="http://192.168.0.52:8080/target/target-script-min.js#web2dot0"></script>
       directory and include it here -->
       <!--
+      <script src="http://192.168.0.52:8081/target/target-script-min.js#client"></script>
       Phone Gap Libs
       -->
-      <script type="text/javascript" src="lib/cordova-2.2.0.android.js"></script>
+      <script type="text/javascript" src="lib/cordova-2.3.0.android.js"></script>
       <script type="text/javascript" src="lib/core/PushNotification.android.js"></script>
       <!-- Debug Javascript on mobile browser -->
       <script type="text/javascript" src="lib/sencha-touch-all.js"></script>
@@ -84,7 +78,7 @@
          }
       </script>
       <script type="text/javascript">
-         var launched = 0x000;
+         var launched = 0x000, pausedDisabled = true;
          var backBtnCallbackListFn = [];
          
          var offlineDialogShown = false;
@@ -92,10 +86,12 @@
          var debugMode = false;
          var merchantMode = false;
          var appName = 'GetKickBak';
-         //var pushNotifAppName = 'KickBak Development';
-         //var pushNotifAppId = '4fef50b25b2f16.74735670';
+         /*
          var pushNotifAppName = 'KickBak Production';
          var pushNotifAppId = '4fef6fb0691c12.54726991';
+         */
+         var pushNotifAppName = 'KickBak Development';
+         var pushNotifAppId = '4fef50b25b2f16.74735670';
          var pushNotifType = 3;
 
          var hostRoot = "";
@@ -158,27 +154,30 @@
             }, false);
             document.addEventListener("pause", function()
             {
-               if (_application)
+               if (_application && (launched == 0x111) && !pausedDisabled)
                {
                   _application.getController('client.Viewport').persistSyncStores();
+                  console.log("App is Paused");
                }
-               console.log("App is Paused");
             }, false);
 
             document.addEventListener("resume", function()
             {
-               if (Ext.device)
+               if (!pausedDisabled)
                {
-                  if (!Ext.device.Connection.isOnline())
+                  if (Ext.device)
                   {
-                     _onGotoMain();
+                     if (!Ext.device.Connection.isOnline())
+                     {
+                        _onGotoMain();
+                     }
+                     else
+                     {
+                        //_onGotoMainCallBackFn();
+                     }
                   }
-                  else
-                  {
-                     //_onGotoMainCallBackFn();
-                  }
-               }
-               console.log("App is Resumed");
+                  console.log("App is Resumed");
+              }
             }, false);
 
             // add back button listener
@@ -201,6 +200,12 @@
                   return;
                }
 
+               if (Ext.device.Notification.msg && !Ext.device.Notification.msg.isHidden())
+               {
+                  Ext.device.Notification.dismiss();
+                  return;
+               }
+               
                console.log("BackButton Pressed");
                var vport = viewport.getViewport();
                var activeItem = (vport) ? vport.getActiveItem() : null;
@@ -269,11 +274,11 @@
                profiles : ['Android'],
                views : ['Document', 'client.UploadPhotosPage', 'client.ChallengePage', 'client.Rewards', 'client.Redemptions', //
                'client.AccountsTransfer', 'client.SettingsPage', //
-               'client.CheckinExplore', 'LoginPage', 'SignInPage', 'MainPage', 'ShowRedeemItemDetail', 'client.Badges', 'client.JackpotWinners', 'client.MerchantAccount',
+               'client.CheckinExplore', 'LoginPage', 'SignInPage', 'client.MainPage', 'widgets.client.RedeemItemDetail', 'client.Badges', 'client.JackpotWinners', 'client.MerchantAccount',
                // //
                'client.MerchantDetails', 'client.Accounts', 'client.Prizes', 'Viewport'],
                controllers : ['client.Challenges', 'client.Rewards', 'client.Redemptions', //
-               'client.Viewport', 'client.MainPage', 'client.Badges', 'client.Merchants', 'client.Accounts', 'Settings', 'client.Checkins', 'client.JackpotWinners', 'client.Prizes'],
+               'client.Viewport', 'client.MainPage', 'client.Badges', 'client.Merchants', 'client.Accounts', 'client.Settings', 'client.Checkins', 'client.JackpotWinners', 'client.Prizes'],
                launch : function()
                {
                   _application = this;
