@@ -151,7 +151,7 @@
 // **************************************************************************
 Genesis.fb =
 {
-   fbScope : ['email', 'user_birthday', 'publish_stream', 'read_friendlists', 'publish_actions', 'offline_access'],
+   fbScope : ['email', 'user_birthday', 'publish_stream', 'read_friendlists', 'publish_actions'],
    fbConnectErrorMsg : 'Cannot retrive Facebook account information!',
    fbConnectRequestMsg : 'Would you like to update your Facebook Timeline?',
    fbConnectReconnectMsg : 'Please confirm to Reconnect to Facebook',
@@ -232,12 +232,13 @@ Genesis.fb =
       {
          name : response.name,
          email : response.email,
-         facebook_email : response.email,
+         //facebook_email : response.email,
          facebook_id : response.id,
          facebook_uid : response.username,
          gender : (response.gender == "male") ? "m" : "f",
          birthday : birthday,
-         photoURL : 'http://graph.facebook.com/' + response.id + '/picture?type=square'
+         photoURL : 'http://graph.facebook.com/' + response.id + '/picture?type=square',
+         accessToken : response.accessToken
       }
 
       return params;
@@ -255,14 +256,6 @@ Genesis.fb =
       {
          callback : (callback) ? Ext.bind(function(params, operation, cb)
          {
-            if (!me.cb['supress'])
-            {
-               Ext.device.Notification.show(
-               {
-                  title : 'Facebook Connect',
-                  message : me.fbConnectFailMsg
-               });
-            }
             //
             // Even if the UpdateFbLogin failed (!operation.wasSuccessful()),
             // we should still allow them to do Facebook related activities ...
@@ -270,6 +263,15 @@ Genesis.fb =
             if (params)
             {
                cb(params, operation);
+            }
+            else
+            if (!me.cb['supress'])
+            {
+               Ext.device.Notification.show(
+               {
+                  title : 'Facebook Connect',
+                  message : me.fbConnectFailMsg
+               });
             }
          }, me, [callback], true) : Ext.emptyFn,
          supress : supress,
@@ -281,6 +283,18 @@ Genesis.fb =
          var fbConnect = function()
          {
             Ext.Viewport.setMasked(null);
+            Ext.Viewport.setMasked(
+            {
+               xtype : 'loadmask',
+               message : me.connectingToFBMsg,
+               listeners :
+               {
+                  'tap' : function()
+                  {
+                     Ext.Viewport.setMasked(null);
+                  }
+               }
+            });
             FB.login(
             {
                permissions : me.fbScope,
@@ -357,6 +371,13 @@ Genesis.fb =
             });
          }
          else
+         if (!res || res.cancelled || me.cb['iter'] >= 3)
+         {
+            Ext.Viewport.setMasked(null);
+            me.cb['callback'](null, null);
+            delete me.cb;
+         }
+         else
          if (me.cb['iter'] < 3)
          {
             me.cb['iter']++;
@@ -369,20 +390,9 @@ Genesis.fb =
                }, Ext.bind(me.facebook_loginCallback, me));
             }, 2 * me.cb['iter'] * 1000, me);
          }
-         else
-         {
-            Ext.Viewport.setMasked(null);
-            me.cb['callback'](null, null);
-            delete me.cb;
-         }
          return;
       }
 
-      Ext.Viewport.setMasked(
-      {
-         xtype : 'loadmask',
-         message : me.connectingToFBMsg
-      });
       try
       {
          date = Date.parse(res['expirationDate']);
@@ -413,7 +423,6 @@ Genesis.fb =
                db['currFbId'] = facebook_id;
                db['fbAccountId'] = response.email;
                db['fbResponse'] = me.createFbResponse(response);
-               Genesis.db.setLocalDB(db);
 
                console.debug('You\`ve logged into Facebook! ' + '\n' + //
                'Email(' + db['fbAccountId'] + ')' + '\n' + //
@@ -441,6 +450,7 @@ Genesis.fb =
                         {
                            Ext.Viewport.setMasked(null);
                            Genesis.db.setLocalDBAttrib('enableFB', true);
+                           Genesis.db.setLocalDB(db);
                         }
                         me.cb['callback'](db['fbResponse'], operation);
                      }
@@ -449,12 +459,14 @@ Genesis.fb =
                else
                {
                   Genesis.db.setLocalDBAttrib('enableFB', true);
+                  Genesis.db.setLocalDB(db);
                   me.cb['callback'](db['fbResponse'], null);
                   delete me.cb;
                }
             }
             else
             {
+               Ext.Viewport.setMasked(null);
                me.cb['callback'](null, null);
                me.facebook_onLogout(null, false);
                delete me.cb;

@@ -11,10 +11,15 @@
       -->
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <title>KickBak</title>
-      <link rel="stylesheet" type="text/css" media="only screen and (max-width:360px) and (-webkit-max-device-pixel-ratio: 0.75)" href="resources/css/android-phone-lhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:540px) and (-webkit-max-device-pixel-ratio: 1.0)" href="resources/css/android-phone-mxhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:360px) and (-webkit-max-device-pixel-ratio: 1.5)" href="resources/css/android-phone-lhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:640px) and (-webkit-min-device-pixel-ratio: 2.0)" href="resources/css/android-phone-mxhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (max-height:640px) and (-webkit-max-device-pixel-ratio: 0.99)" href="resources/css/android-phone-lhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (max-height:640px) and (-webkit-device-pixel-ratio: 1.0)" href="resources/css/android-phone-mxhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (max-height:640px) and (-webkit-max-device-pixel-ratio: 1.99)" href="resources/css/android-phone-lhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (max-height:640px) and (-webkit-min-device-pixel-ratio: 2.0)" href="resources/css/android-phone-mxhdpi.css">
+
+      <link rel="stylesheet" type="text/css" media="only screen and (min-height:641px) and (-webkit-max-device-pixel-ratio: 0.99)" href="resources/css/android-tablet-lhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (min-height:641px) and (-webkit-device-pixel-ratio: 1.0)" href="resources/css/android-tablet-mxhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (min-height:641px) and (-webkit-max-device-pixel-ratio: 1.99)" href="resources/css/android-tablet-lhdpi.css">
+      <link rel="stylesheet" type="text/css" media="only screen and (min-height:641px) and (-webkit-min-device-pixel-ratio: 2.0)" href="resources/css/android-tablet-mxhdpi.css">
       <!-- If your application is targeting iOS BEFORE 4.0 you MUST put json2.js from http://www.JSON.org/json2.js into your www
       directory and include it here -->
       <!--
@@ -89,9 +94,11 @@
          /*
          var pushNotifAppName = 'KickBak Production';
          var pushNotifAppId = '4fef6fb0691c12.54726991';
+         var pushNotifProjectId = '733275653511';
          */
-         var pushNotifAppName = 'KickBak Development';
-         var pushNotifAppId = '4fef50b25b2f16.74735670';
+         var pushNotifAppName = 'KickBak Dev Latest';
+         var pushNotifAppId = '93D8A-5BE72';
+         var pushNotifProjectId = '658015469194';
          var pushNotifType = 3;
 
          var hostRoot = "";
@@ -183,30 +190,26 @@
             // add back button listener
             function onBackKeyDown(e)
             {
+               var viewport = _application.getController('client.Viewport');
+
                //e.preventDefault();
 
                //
                // Disable BackKey if something is in progress or application is not instantiated
                //
-               if (!_application || Ext.Viewport.getMasked())
+               if (!_application || Ext.Viewport.getMasked() || !viewport || viewport.popViewInProgress)
                {
                   return;
                }
 
-               var viewport = _application.getController('client.Viewport');
-
-               if (!viewport || viewport.popViewInProgress)
-               {
-                  return;
-               }
-
+               console.log("BackButton Pressed");
+               
                if (Ext.device.Notification.msg && !Ext.device.Notification.msg.isHidden())
                {
                   Ext.device.Notification.dismiss();
                   return;
                }
                
-               console.log("BackButton Pressed");
                var vport = viewport.getViewport();
                var activeItem = (vport) ? vport.getActiveItem() : null;
                if (activeItem)
@@ -227,14 +230,14 @@
                      if ((backButton && !backButton.isHidden()) || //
                      (closeButton && !closeButton.isHidden()))
                      {
-                        Genesis.controller.ControllerBase.playSoundFile(viewport.sound_files['clickSound']);
+                        viewport.self.playSoundFile(viewport.sound_files['clickSound']);
                         viewport.popView();
                      }
                   }
                }
                else
                {
-                  Genesis.controller.ControllerBase.playSoundFile(viewport.sound_files['clickSound']);
+                  viewport.self.playSoundFile(viewport.sound_files['clickSound']);
                   navigator.app.exitApp();
                }
             }
