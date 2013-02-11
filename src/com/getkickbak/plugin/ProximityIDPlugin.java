@@ -38,7 +38,7 @@ public class ProximityIDPlugin extends CordovaPlugin
 	private static final String STOP                 = "stop";
 	private static final String VOLUME               = "setVolume";
 
-	private boolean             merchantDevice       = true;
+	private boolean             merchantDevice       = false;
 	private boolean             isSender;
 	private int                 s_vol                = -1;
 	private Communicator        comm;
@@ -213,6 +213,9 @@ public class ProximityIDPlugin extends CordovaPlugin
 	private void init()
 	{
 		audioMan = (AudioManager) cordova.getActivity().getSystemService(Context.AUDIO_SERVICE);
+		audioMan.setBluetoothScoOn(false);
+		audioMan.setSpeakerphoneOn(true);
+		audioMan.setMode(AudioManager.MODE_CURRENT);
 	}
 
 	/**
@@ -313,11 +316,12 @@ public class ProximityIDPlugin extends CordovaPlugin
 		}
 		else if (task == null)
 		{
-			s_vol = audioMan.getStreamVolume(AudioManager.STREAM_MUSIC);
-			int vol = (int) (audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC) * RECV_VOL_RATIO);
-			audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
-			Log.i(TAG, "Setting Volume to [" + vol + "]");
-			// comm = new Receiver(audioMan, samples, missedThreshold, magThreshold, overlapRatio);
+			s_vol = -1;
+			//s_vol = audioMan.getStreamVolume(AudioManager.STREAM_MUSIC);
+			//int vol = (int) (audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC) * RECV_VOL_RATIO);
+			//audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
+			//Log.i(TAG, "Setting Volume to [" + vol + "]");
+			//comm = new Receiver(audioMan, samples, missedThreshold, magThreshold, overlapRatio);
 			task = new CommunicatorTask(comm, callbackContext);
 			task.execute();
 			isSender = false;
