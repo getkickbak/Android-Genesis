@@ -5,7 +5,7 @@
 
     <uses-sdk
         android:minSdkVersion="10"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="17" />
 
    <compatible-screens>
         <!-- all small size screens -->
@@ -95,7 +95,7 @@
         		<category android:name="android.intent.category.DEFAULT" />
         		<data android:mimeType="image/*" />
       		</intent-filter>
-        </activity>
+            </activity>
         <!-- ZXing activities -->
         <activity android:name="com.google.zxing.client.android.CaptureActivity"
            android:screenOrientation="landscape"
