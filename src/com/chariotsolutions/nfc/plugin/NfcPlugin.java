@@ -5,9 +5,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
+import android.content.pm.PackageManager;
 import android.nfc.*;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
+import android.os.Build;
 import android.os.Parcelable;
 import android.util.Log;
 import org.apache.cordova.api.Plugin;
@@ -16,6 +18,9 @@ import org.apache.cordova.api.PluginResult.Status;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.os.Build;
+import android.content.pm.PackageManager;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -31,6 +36,7 @@ public class NfcPlugin extends Plugin {
     private static final String SHARE_TAG = "shareTag";
     private static final String UNSHARE_TAG = "unshareTag";
     private static final String INIT = "init";
+	private static final String ISENABLED = "isEnabled";
 
     private static final String NDEF = "ndef";
     private static final String NDEF_MIME = "ndef-mime";
@@ -50,8 +56,17 @@ public class NfcPlugin extends Plugin {
     @Override
     public PluginResult execute(String action, JSONArray data, String callbackId) {
         Log.d(TAG, "execute " + action);
+        
+        if (action.equalsIgnoreCase(ISENABLED)) {
+        	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                if (this.getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
+                    return new PluginResult(Status.OK, true);
+                }
+            }
+            return new PluginResult(Status.OK, false);
+        }
+        
         createPendingIntent();
-
         if (action.equalsIgnoreCase(REGISTER_MIME_TYPE)) {
             try {
                 String mimeType = data.getString(0);

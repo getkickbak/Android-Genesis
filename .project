@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>KICKBAK</name>
+	<name>KICKBAK_v2</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -31,7 +31,16 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/BuildScript for Javascript and HTML.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/BuildScript for KICKBAK Javascript and HTML.launch</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/NDK KICKBAK Builder.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
