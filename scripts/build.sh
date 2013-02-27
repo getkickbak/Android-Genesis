@@ -30,4 +30,5 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/css/android*.css $PROJ
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.mp3 $PROJECT_DIR/www/resources/audio/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.wav $PROJECT_DIR/www/resources/audio/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/themes/images/v1/*facebook* $PROJECT_DIR/www/resources/themes/images/v1/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/themes/images/v1/*twitter* $PROJECT_DIR/www/resources/themes/images/v1/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/themes/images/v1/android/* $PROJECT_DIR/www/resources/themes/images/v1/android
