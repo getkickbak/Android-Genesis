@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #appPath="/Users/eric/Documents/Aptana Studio 3 Workspace/GetKickBak/public/javascripts/mobile";
-appPath="/Users/eric/Documents/GetKickBak/V2.0.0/V2.0.0/public/javascripts/mobile";
+appPath="/Users/eric/Documents/GetKickBak/V2.1.0/V2.1.0/public/javascripts/mobile";
 PROJECT_DIR="$1"
 
-libPath="lib/sencha-touch-2.1.0-commercial";
+libPath="lib/touch-2.1.1";
 
 mkdir -p $PROJECT_DIR/www/app/store
 mkdir -p $PROJECT_DIR/www/app/profile
@@ -31,4 +31,3 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.mp3 $PROJECT_D
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.wav $PROJECT_DIR/www/resources/audio/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/themes/images/v1/*facebook* $PROJECT_DIR/www/resources/themes/images/v1/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/themes/images/v1/android/* $PROJECT_DIR/www/resources/themes/images/v1/android
-
