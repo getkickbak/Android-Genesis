@@ -151,11 +151,16 @@
 // **************************************************************************
 Genesis.fb =
 {
+   appId : null,
+   titleMsg : 'Facebook Connect',
    fbScope : ['email', 'user_birthday', 'publish_stream', 'read_friendlists', 'publish_actions'],
    fbConnectErrorMsg : 'Cannot retrive Facebook account information!',
-   fbConnectRequestMsg : 'Would you like to update your Facebook Timeline?',
-   fbConnectReconnectMsg : 'Please confirm to Reconnect to Facebook',
+   fbConnectRequestMsg : 'By connecting to Facebook, you will be received additional Reward Pts everytime we update your KICKBAK activity to your Facebook account!',
+   //   fbConnectRequestMsg : 'Would you like to update your Facebook Timeline?',
+   fbConnectReconnectMsg : 'By connecting to Facebook, you will be received additional Reward Pts everytime we update your KICKBAK activity to your Facebook account!',
+   //fbConnectReconnectMsg : 'Please confirm to Reconnect to Facebook',
    connectingToFBMsg : 'Connecting to Facebook ...',
+   loggingOutOfFBMsg : 'Logging out of Facebook ...',
    fbConnectFailMsg : 'Error Connecting to Facebook.',
    friendsRetrieveErrorMsg : 'You cannot retrieve your Friends List from Facebook. Login and Try Again.',
    /*
@@ -166,6 +171,8 @@ Genesis.fb =
    initFb : function()
    {
       var me = this, FB = window.plugins.facebookConnect;
+
+      me.appId = (debugMode) ? 477780595628080 : 197968780267830;
    },
    getFriendsList : function(callback)
    {
@@ -207,7 +214,7 @@ Genesis.fb =
          {
             Ext.device.Notification.show(
             {
-               title : 'Facebook Connect',
+               title : me.titleMsg,
                message : me.friendsRetrieveErrorMsg,
                buttons : ['Cancel', 'Relogin'],
                callback : function(button)
@@ -250,7 +257,28 @@ Genesis.fb =
    {
       var me = this, FB = window.plugins.facebookConnect, db = Genesis.db.getLocalDB();
       var refreshConn = (!(db['currFbId'] > 0) || !parseInt(db['fbExpiresIn']) || //
-      ((db['currFbId'] > 0) && (db['fbExpiresIn'] > 0) && (parseInt(db['fbExpiresIn']) <= (new Date().addHours(2)).getTime())));
+      ((db['currFbId'] > 0) && (db['fbExpiresIn'] > 0) && (parseInt(db['fbExpiresIn']) <= (new Date()).getTime())));
+      var fbConnect = function()
+      {
+         Ext.Viewport.setMasked(null);
+         Ext.Viewport.setMasked(
+         {
+            xtype : 'loadmask',
+            message : me.connectingToFBMsg,
+            listeners :
+            {
+               'tap' : function()
+               {
+                  Ext.Viewport.setMasked(null);
+               }
+            }
+         });
+         FB.login(
+         {
+            permissions : me.fbScope,
+            appId : "" + me.appId
+         }, Ext.bind(me.facebook_loginCallback, me));
+      };
 
       me.cb =
       {
@@ -260,54 +288,46 @@ Genesis.fb =
             // Even if the UpdateFbLogin failed (!operation.wasSuccessful()),
             // we should still allow them to do Facebook related activities ...
             //
-            if (params)
+            if ((operation && !operation.wasSuccessful()))
+            {
+               //
+               // Reconnect with Facebook
+               //
+               me.facebook_onLogout(null, false);
+               Ext.defer(function()
+               {
+                  me.facebook_onLogin(cb, false, message);
+               }, 1, me);
+               /*
+                if (!me.cb['supress'])
+                {
+                Ext.device.Notification.show(
+                {
+                title : me.titleMsg,
+                message : me.fbConnectFailMsg,
+                buttons : ['Dismiss']
+                });
+                }
+                */
+            }
+            else
             {
                cb(params, operation);
             }
-            else
-            if (!me.cb['supress'])
-            {
-               Ext.device.Notification.show(
-               {
-                  title : 'Facebook Connect',
-                  message : me.fbConnectFailMsg
-               });
-            }
-         }, me, [callback], true) : Ext.emptyFn,
+         }, null, [callback], true) : Ext.emptyFn,
          supress : supress,
          iter : 0
       }
 
       if (refreshConn)
       {
-         var fbConnect = function()
-         {
-            Ext.Viewport.setMasked(null);
-            Ext.Viewport.setMasked(
-            {
-               xtype : 'loadmask',
-               message : me.connectingToFBMsg,
-               listeners :
-               {
-                  'tap' : function()
-                  {
-                     Ext.Viewport.setMasked(null);
-                  }
-               }
-            });
-            FB.login(
-            {
-               permissions : me.fbScope,
-               appId : "" + _appId
-            }, Ext.bind(me.facebook_loginCallback, me));
-         }
          if (!me.cb['supress'])
          {
-            var buttons = (Genesis.db.getLocalDB()['enableFB']) ? ['Confirm', 'Cancel'] : ['OK', 'Cancel'];
-            message = message || ((Genesis.db.getLocalDB()['enableFB']) ? me.fbConnectReconnectMsg : me.fbConnectRequestMsg);
+            var buttons = (db['enableFB']) ? ['Confirm', 'Cancel'] : ['OK', 'Cancel'];
+            message = message || ((db['enableFB']) ? me.fbConnectReconnectMsg : me.fbConnectRequestMsg);
             Ext.device.Notification.show(
             {
-               title : 'Facebook Connect',
+               title : me.titleMsg,
                message : message,
                buttons : buttons,
                callback : function(btn)
@@ -315,6 +335,10 @@ Genesis.fb =
                   if (btn.toLowerCase() == buttons[0].toLowerCase())
                   {
                      fbConnect();
+                  }
+                  else
+                  {
+                     me.cb['callback'](null, null);
                   }
                }
             });
@@ -346,7 +370,7 @@ Genesis.fb =
          {
             Ext.device.Notification.show(
             {
-               title : 'Facebook Connect',
+               title : me.titleMsg,
                message : me.fbConnectErrorMsg,
                buttons : ['Try Again', 'Continue'],
                callback : function(btn)
@@ -358,7 +382,7 @@ Genesis.fb =
                         FB.login(
                         {
                            permissions : me.fbScope,
-                           appId : "" + _appId
+                           appId : "" + me.appId
                         }, Ext.bind(me.facebook_loginCallback, me));
                      }, 1, me);
                   }
@@ -370,15 +394,13 @@ Genesis.fb =
                }
             });
          }
-         else
-         if (!res || res.cancelled || me.cb['iter'] >= 3)
+         else if (!res || res.cancelled || me.cb['iter'] >= 3)
          {
             Ext.Viewport.setMasked(null);
             me.cb['callback'](null, null);
             delete me.cb;
          }
-         else
-         if (me.cb['iter'] < 3)
+         else if (me.cb['iter'] < 3)
          {
             me.cb['iter']++;
             Ext.defer(function()
@@ -386,7 +408,7 @@ Genesis.fb =
                FB.login(
                {
                   permissions : me.fbScope,
-                  appId : "" + _appId
+                  appId : "" + me.appId
                }, Ext.bind(me.facebook_loginCallback, me));
             }, 2 * me.cb['iter'] * 1000, me);
          }
@@ -414,7 +436,7 @@ Genesis.fb =
       {
          FB.requestWithGraphPath('/me', function(response)
          {
-            if (!response.error || response.id && (response.id > 0))
+            if (!response.error || (response.id && (response.id > 0)))
             {
                var db = Genesis.db.getLocalDB(), facebook_id = response.id;
 
@@ -477,13 +499,13 @@ Genesis.fb =
    _fb_connect : function()
    {
       /*
-       $.cookie(Genesis.fbAppId + "_expires", null);
-       $.cookie(Genesis.fbAppId + "_session_key", null);
-       $.cookie(Genesis.fbAppId + "_ss", null);
-       $.cookie(Genesis.fbAppId + "_user", null);
-       $.cookie(Genesis.fbAppId, null);
+       $.cookie(this.appId + "_expires", null);
+       $.cookie(this.appId + "_session_key", null);
+       $.cookie(this.appId + "_ss", null);
+       $.cookie(this.appId + "_user", null);
+       $.cookie(this.appId, null);
        $.cookie("base_domain_", null);
-       $.cookie("fbsr_" + Genesis.fbAppId, null);
+       $.cookie("fbsr_" + this.appId, null);
        */
    },
    _fb_disconnect : function()
@@ -505,13 +527,18 @@ Genesis.fb =
       Genesis.db.setLocalDB(db);
 
       console.debug("facebook_onLogout");
-      Ext.Viewport.setMasked(null);
       try
       {
          if (contactFB)
          {
+            Ext.Viewport.setMasked(
+            {
+               xtype : 'loadmask',
+               message : me.loggingOutOfFBMsg
+            });
             FB.logout(function(response)
             {
+               Ext.Viewport.setMasked(null);
                //FB.Auth.setAuthResponse(null, 'unknown');
                cb();
             });

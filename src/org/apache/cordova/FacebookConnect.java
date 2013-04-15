@@ -94,7 +94,7 @@ public class FacebookConnect extends Plugin {
 		result.put("appId", this.appId);
 
 		// Check for any stored session update Facebook session information
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.cordova.getContext());
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.cordova.getActivity());
 		String accessToken = prefs.getString("access_token", null);
 		Long accessExpires = prefs.getLong("access_expires", 0);
 		if(accessToken != null) facebook.setAccessToken(accessToken);
@@ -129,7 +129,7 @@ public class FacebookConnect extends Plugin {
 		Facebook facebook = this.getFacebook();
 
 		// Check for any stored session update Facebook session information
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.cordova.getContext());
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.cordova.getActivity());
 		String accessToken = prefs.getString("access_token", null);
 		Long accessExpires = prefs.getLong("access_expires", 0);
 		if(accessToken != null) facebook.setAccessToken(accessToken);
@@ -227,7 +227,7 @@ public class FacebookConnect extends Plugin {
 		final FacebookConnect me = this;
 		Runnable runnable = new Runnable() {
 			public void run() {
-				me.getFacebook().dialog(me.cordova.getContext(), method, options, new RegularDialogListener(me, callbackId));
+				me.getFacebook().dialog(me.cordova.getActivity(), method, options, new RegularDialogListener(me, callbackId));
 			};
 		};
 		pluginResult.setKeepCallback(true);
@@ -248,10 +248,10 @@ public class FacebookConnect extends Plugin {
 	 */
 	public PluginResult logout(final JSONArray args, final String callbackId) throws JSONException, MalformedURLException, IOException {
 		Log.d(CLASS, "logout() :" + args.toString());
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.cordova.getContext());
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.cordova.getActivity());
 		prefs.edit().remove("access_expires").commit();
 		prefs.edit().remove("access_token").commit();
-		this.getFacebook().logout(this.cordova.getContext());
+		this.getFacebook().logout(this.cordova.getActivity());
 		return new PluginResult(PluginResult.Status.OK);
 	}
 
@@ -288,7 +288,7 @@ public class FacebookConnect extends Plugin {
 			// Update session information
 			final String accessToken = this.facebook.getAccessToken();
 			final long accessExpires = this.facebook.getAccessExpires();
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.cordova.getContext());
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.cordova.getActivity());
 			prefs.edit().putString("access_token", accessToken).commit();
 			prefs.edit().putLong("access_expires", accessExpires).commit();
 

@@ -1,11 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.getkickbak.kickbak"
-    android:versionCode="13"
-    android:versionName="2.1.0" >
+    android:versionCode="16"
+    android:versionName="2.1.2" >
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="17" />
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" />
 
    <compatible-screens>
         <!-- all small size screens -->
@@ -59,12 +57,10 @@
    <permission
          android:name="com.getkickbak.kickbak.permission.C2D_MESSAGE"
          android:protectionLevel="signature"/>
-   <uses-permission
-         android:name="com.getkickbak.kickbak.permission.C2D_MESSAGE"/>
+   <uses-permission android:name="com.getkickbak.kickbak.permission.C2D_MESSAGE"/>
  
    <!-- This app has permission to register and receive data message. -->
-   <uses-permission
-         android:name="com.google.android.c2dm.permission.RECEIVE"/>
+   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
    <uses-feature android:name="android.hardware.microphone" android:required="true"></uses-feature>
@@ -72,13 +68,16 @@
    <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
 	
-    <application
-        android:icon="@drawable/ic_launcher"
+            <!-- application
+            -->
+            <!-- activity
+            -->
+   <application android:icon="@drawable/ic_launcher"
+        android:hardwareAccelerated="true" 
+        android:allowBackup="true"
         android:label="@string/app_name"
-		android:hardwareAccelerated="true" 
         android:theme="@style/AppTheme" >
-        <activity
-            android:name=".KICKBAK"
+        <activity android:name=".KICKBAK"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
             android:label="@string/title_activity_kick_bak"
             android:screenOrientation="portrait" >
@@ -141,5 +140,5 @@
          handle received messages.
        -->
        <service android:name="com.arellomobile.android.push.PushGCMIntentService"/>
-       </application>
+   </application>
 </manifest>

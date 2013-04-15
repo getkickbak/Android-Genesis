@@ -36,6 +36,11 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
+			<name>net.rim.ajde.internal.verifier</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
 			<arguments>
 				<dictionary>
@@ -48,5 +53,6 @@
 	<natures>
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>net.rim.ajde.BlackBerryAndroidNature</nature>
 	</natures>
 </projectDescription>

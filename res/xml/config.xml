@@ -25,6 +25,7 @@
     <!-- allow local pages -->
     <access origin="http://127.0.0.1*"/> <!-- allow local pages -->
     <access origin="http://192.168.0.52*"/>
+    <access origin="http://192.168.0.46*"/> 
     <access origin="http://76.10.173.153*"/> 
     <access origin="https://*.pushwoosh.com" subdomains="true" />
     <access origin="http://*.devgetkickbak.com" subdomains="true" />
@@ -41,42 +42,43 @@
     <access origin=".*"/>
     -->
 
+    <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
+    <content src="index.html" />
+    
     <log level="ERROR"/>
     <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
 <plugins>
     <!--
     <plugin name="Temperature" value="org.apache.cordova.TempListener"/>
-   <plugin name="BumpPlugin" value="com.bump.plugin.BumpPlugin"/>
-   <plugin name="EbkPlugin" value="sdi.SSC.Ebk.EbkPlugin"/>
     -->    
    <plugin name="ProximityIDPlugin" value="com.getkickbak.plugin.ProximityIDPlugin"/>
    <plugin name="NotificationPlugin" value="com.getkickbak.plugin.NotificationPlugin"/>
-   	<plugin name="Base64ToPNG" value="org.apache.cordova.Base64ToPNG"/>
+   <plugin name="Base64ToPNG" value="org.apache.cordova.Base64ToPNG"/>
 	<plugin name="WebIntent" value="com.borismus.webintent.WebIntent"/>
-	<plugin name="PushNotification" value="com.pushwoosh.test.plugin.pushnotifications.PushNotifications" onload="true"/>
-    <plugin name="LowLatencyAudio" value="com.phonegap.PGLowLatencyAudio" />
-    <plugin name="FacebookConnect" value="org.apache.cordova.FacebookConnect"/>
-    <plugin name="BarCodeScanner" value="com.phonegap.plugins.barcodescanner.BarcodeScanner"/>
+	<plugin name="PushNotification" value="com.pushwoosh.plugin.pushnotifications.PushNotifications" onload="true"/>
+   <plugin name="LowLatencyAudio" value="com.phonegap.PGLowLatencyAudio" />
+   <plugin name="FacebookConnect" value="org.apache.cordova.FacebookConnect"/>
+   <plugin name="BarCodeScanner" value="com.phonegap.plugins.barcodescanner.BarcodeScanner"/>
     
-    <plugin name="App" value="org.apache.cordova.App"/>
-    <plugin name="Geolocation" value="org.apache.cordova.GeoBroker"/>
-    <plugin name="Device" value="org.apache.cordova.Device"/>
-    <plugin name="Accelerometer" value="org.apache.cordova.AccelListener"/>
-    <plugin name="Compass" value="org.apache.cordova.CompassListener"/>
-    <plugin name="Media" value="org.apache.cordova.AudioHandler"/>
-    <plugin name="Camera" value="org.apache.cordova.CameraLauncher"/>
-    <plugin name="Contacts" value="org.apache.cordova.ContactManager"/>
-    <plugin name="File" value="org.apache.cordova.FileUtils"/>
-    <plugin name="NetworkStatus" value="org.apache.cordova.NetworkManager"/>
-    <plugin name="Notification" value="org.apache.cordova.Notification"/>
-    <plugin name="Storage" value="org.apache.cordova.Storage"/>
-    <plugin name="FileTransfer" value="org.apache.cordova.FileTransfer"/>
-    <plugin name="Capture" value="org.apache.cordova.Capture"/>
-    <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
-    <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
-    <plugin name="Echo" value="org.apache.cordova.Echo" />
-    <plugin name="Globalization" value="org.apache.cordova.Globalization" />
-    <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser"/>
+   <plugin name="App" value="org.apache.cordova.App"/>
+   <plugin name="Geolocation" value="org.apache.cordova.GeoBroker"/>
+   <plugin name="Device" value="org.apache.cordova.Device"/>
+   <plugin name="Accelerometer" value="org.apache.cordova.AccelListener"/>
+   <plugin name="Compass" value="org.apache.cordova.CompassListener"/>
+   <plugin name="Media" value="org.apache.cordova.AudioHandler"/>
+   <plugin name="Camera" value="org.apache.cordova.CameraLauncher"/>
+   <plugin name="Contacts" value="org.apache.cordova.ContactManager"/>
+   <plugin name="File" value="org.apache.cordova.FileUtils"/>
+   <plugin name="NetworkStatus" value="org.apache.cordova.NetworkManager"/>
+   <plugin name="Notification" value="org.apache.cordova.Notification"/>
+   <plugin name="Storage" value="org.apache.cordova.Storage"/>
+   <plugin name="FileTransfer" value="org.apache.cordova.FileTransfer"/>
+   <plugin name="Capture" value="org.apache.cordova.Capture"/>
+   <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
+   <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
+   <plugin name="Echo" value="org.apache.cordova.Echo" />
+   <plugin name="Globalization" value="org.apache.cordova.Globalization" />
+   <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser"/>
 </plugins>
 </cordova>
