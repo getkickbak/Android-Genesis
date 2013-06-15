@@ -26,8 +26,9 @@
       Phone Gap Libs
       -->
       <script type="text/javascript" src="lib/gibberish-aes.min.js"></script>
-      <script type="text/javascript" src="lib/cordova-2.6.0.android.js"></script>
-      <script type="text/javascript" src="lib/core/PushNotification.android.js"></script>
+      <script type="text/javascript" src="lib/cordova-2.8.1.android.js"></script>
+      <script type="text/javascript" src="lib/core/PushNotification.js"></script>
+      <script type="text/javascript" src="lib/core/FacebookConnect.js"></script>
       <!-- Debug Javascript on mobile browser -->
       <script type="text/javascript" src="lib/sencha-touch-all.js"></script>
       <!--
@@ -78,7 +79,7 @@
                Ext.create('Genesis.view.Viewport');
                //this.redirectTo('');
                console.log("Launched App");
-               //navigator.splashscreen.hide();
+               navigator.splashscreen.hide();
                initPushwoosh();
             }
          }
@@ -90,6 +91,13 @@
          var offlineDialogShown = false;
          var phoneGapAvailable = true;
          var debugMode = false;
+         var serverHost;
+         //serverHost = 'http://192.168.0.52:3000';
+         //serverHost = 'http://192.168.0.46:3000';
+		 //serverHost = 'http://76.10.173.153';
+		 //serverHost = 'http://www.dev1getkickbak.com';
+		 //serverHost = 'http://www.devgetkickbak.com';
+		 serverHost = 'http://www.getkickbak.com';
          var merchantMode = false;
          var appName = 'GetKickBak';
          
@@ -147,8 +155,8 @@
                   {
                      _onGotoMain();
                   }
+                  console.log("Phone is Offline");
                }
-               console.log("Phone is Offline");
             }, false);
             document.addEventListener("pause", function()
             {
@@ -177,61 +185,6 @@
                   console.log("App is Resumed");
               }
             }, false);
-
-            // add back button listener
-            function onBackKeyDown(e)
-            {
-               var viewport = _application.getController('client' + '.Viewport');
-
-               //e.preventDefault();
-
-               //
-               // Disable BackKey if something is in progress or application is not instantiated
-               //
-               if (!_application || Ext.Viewport.getMasked() || !viewport || viewport.popViewInProgress)
-               {
-                  return;
-               }
-
-               console.log("BackButton Pressed");
-               
-               if (Ext.device.Notification.msg && !Ext.device.Notification.msg.isHidden())
-               {
-                  Ext.device.Notification.dismiss();
-                  return;
-               }
-               
-               var vport = viewport.getViewport();
-               var activeItem = (vport) ? vport.getActiveItem() : null;
-               if (activeItem)
-               {
-                  var success = false;
-                  for (var i = 0; i < backBtnCallbackListFn.length; i++)
-                  {
-                     success = backBtnCallbackListFn[i](activeItem);
-                     if (success)
-                     {
-                        break;
-                     }
-                  }
-                  if (!success)
-                  {
-                     var backButton = activeItem.query('button[tag=back]')[0];
-                     var closeButton = activeItem.query('button[tag=close]')[0];
-                     if ((backButton && !backButton.isHidden()) || //
-                     (closeButton && !closeButton.isHidden()))
-                     {
-                        viewport.self.playSoundFile(viewport.sound_files['clickSound']);
-                        viewport.popView();
-                     }
-                  }
-               }
-               else
-               {
-                  viewport.self.playSoundFile(viewport.sound_files['clickSound']);
-                  navigator.app.exitApp();
-               }
-            }
 
             document.addEventListener("deviceready", function()
             {
@@ -297,12 +250,7 @@
       <script type="text/javascript" src="client-all.js"></script>
    </head>
    <body onload="onBodyLoad()">
-      <!--
       <div id="fb-root"></div>
-      <script type="text/javascript" src="lib/core/cdv-plugin-fb-connect.js"></script>
-      <script type="text/javascript" src="lib/core/facebook_js_sdk.js"></script>
-      -->
-      <script type="text/javascript" src="lib/core/FacebookConnect.js"></script>
       <script type="text/javascript">
          window.onerror = function(msg, url, linenum)
          {
