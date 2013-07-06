@@ -4,7 +4,7 @@
 appPath="/Users/eric/Documents/GetKickBak/V2.1.0/V2.1.0/public/javascripts/mobile";
 PROJECT_DIR="$1"
 
-libPath="../lib/touch-2.1.1";
+libPath="$appPath/../lib/touch-2.1.1";
 
 mkdir -p $PROJECT_DIR/www/app/store
 mkdir -p $PROJECT_DIR/www/app/profile
@@ -20,12 +20,10 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/core.js $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/index_android.html $PROJECT_DIR/www/index.html
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/*android.js $PROJECT_DIR/www/lib/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/PushNotification.js $PROJECT_DIR/www/lib/core/
-rsync -pvtrlL --delete --cvs-exclude "$appPath"/../lib/*min.js $PROJECT_DIR/www/lib/
+rsync -pvtrlL --delete --cvs-exclude "$libPath"/../*aes.min.js $PROJECT_DIR/www/lib/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*nfc*.js $PROJECT_DIR/www/lib/core/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*.android.js $PROJECT_DIR/www/lib/core/
-rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/Facebook*.js $PROJECT_DIR/www/lib/core/
-rsync -pvtrlL --delete --cvs-exclude "$appPath"/$libPath/sencha-touch-all.js $PROJECT_DIR/www/lib/
-#rsync -pvtrlL --delete --cvs-exclude "$appPath"/$libPath/src $PROJECT_DIR/www/$libPath
+rsync -pvtrlL --delete --cvs-exclude "$libPath"/sencha-touch-all.js $PROJECT_DIR/www/lib/
 
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/css/android*.css $PROJECT_DIR/www/resources/css/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.mp3 $PROJECT_DIR/www/resources/audio/

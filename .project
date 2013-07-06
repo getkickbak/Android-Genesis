@@ -36,8 +36,13 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>net.rim.ajde.internal.verifier</name>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/net.rim.ajde.internal.verifier.launch</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>

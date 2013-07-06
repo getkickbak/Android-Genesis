@@ -28,7 +28,6 @@
       <script type="text/javascript" src="lib/gibberish-aes.min.js"></script>
       <script type="text/javascript" src="lib/cordova-2.8.1.android.js"></script>
       <script type="text/javascript" src="lib/core/PushNotification.js"></script>
-      <script type="text/javascript" src="lib/core/FacebookConnect.js"></script>
       <!-- Debug Javascript on mobile browser -->
       <script type="text/javascript" src="lib/sencha-touch-all.js"></script>
       <!--
@@ -75,9 +74,9 @@
                var viewport = _application.getController('client' + '.Viewport');
                viewport.appName = appName;
 
-               //console.log("Launching App");
+               QRCodeReader.prototype.scanType = "Default";
+               console.debug("QRCode Scanner Mode[" + QRCodeReader.prototype.scanType + "]");
                Ext.create('Genesis.view.Viewport');
-               //this.redirectTo('');
                console.log("Launched App");
                navigator.splashscreen.hide();
                initPushwoosh();
@@ -86,7 +85,7 @@
       </script>
       <script type="text/javascript">
          var launched = 0x000, pausedDisabled = true, backBtnCallbackListFn = [], offlineDialogShown = false, phoneGapAvailable = true;
-         var debugMode = false, serverHost, merchantMode = false, _application;
+         var debugMode = false, serverHost, merchantMode = false, _application, _filesAssetCount = 0;
          var appName = 'GetKickBak', _appPath = "app", _extPath = 'lib/touch-2.1.1/src';
          
          if (debugMode)
@@ -131,7 +130,7 @@
             {
                if (Ext.device)
                {
-                  console.log("Phone is Online" + ", "+ //
+                  console.debug("Phone is Online" + ", "+ //
                   Ext.device.Connection.__proto__.$className + ", " + //
                   "devicePixelRatio - " + window.devicePixelRatio + ", " + //
                   'Connection type: [' + Ext.device.Connection.getType() + ']');
@@ -151,7 +150,7 @@
                   {
                      _onGotoMain();
                   }
-                  console.log("Phone is Offline");
+                  console.debug("Phone is Offline");
                }
             }, false);
             document.addEventListener("pause", function()
@@ -159,7 +158,7 @@
                if (_application && (launched == 0x111) && !pausedDisabled)
                {
                   _application.getController('client' + '.Viewport').persistSyncStores();
-                  console.log("App is Paused");
+                  console.debug("App is Paused");
                }
             }, false);
 
@@ -178,17 +177,17 @@
                         //_onGotoMainCallBackFn();
                      }
                   }
-                  console.log("App is Resumed");
+                  console.debug("App is Resumed");
               }
             }, false);
 
             document.addEventListener("deviceready", function()
             {
                //navigator.splashscreen.show();
-               console.debug = console.debug || console.log;
+               console.debug = (!debugMode) ? Ext.emptyFn : console.debug || console.log;
                console.warn = console.warn || console.debug;
 
-               console.log("PhoneGap App Launch");
+               console.debug("PhoneGap App Launch");
                launched = 0x110;
                _appLaunch();
                document.addEventListener("backbutton", onBackKeyDown, false);
@@ -213,13 +212,14 @@
             Ext.Ajax.setDisableCaching(false);
             Ext.application(
             {
+               requires : ['Ext.MessageBox', 'Ext.device.Notification', 'Ext.device.Camera', 'Ext.device.Orientation'],
                profiles : ['Android'],
                views : ['Document', 'client.UploadPhotosPage', 'client.ChallengePage', 'client.Rewards', 'client.Redemptions', //
                'client.AccountsTransfer', 'client.SettingsPage', //
                'client.CheckinExplore', 'LoginPage', 'SignInPage', 'client.MainPage', 'widgets.client.RedeemItemDetail', 'client.Badges', 'client.JackpotWinners', 'client.MerchantAccount',
                // //
                'client.MerchantDetails', 'client.Accounts', 'client.Prizes', 'Viewport'],
-               controllers : ['client.Challenges', 'client.Rewards', 'client.Redemptions', //
+               controllers : ['mobileClient.Challenges', 'client.Rewards', 'client.Redemptions', //
                'client.Viewport', 'client.MainPage', 'client.Badges', 'client.Merchants', 'client.Accounts', 'client.Settings', 'client.Checkins', 'client.JackpotWinners', 'client.Prizes'],
                launch : function()
                {
@@ -232,7 +232,7 @@
                   {
                      launched = 0x001;
                   }
-                  console.log("Ext App Launch")
+                  console.debug("Ext App Launch")
                   _appLaunch();
                },
                appFolder : _appPath,
@@ -250,7 +250,7 @@
       <script type="text/javascript">
          window.onerror = function(msg, url, linenum)
          {
-            console.log("Error on Line#" + linenum + "\n" + msg);
+            console.debug("Error on Line#" + linenum + "\n" + msg);
          }
       </script>
       <!-- Cache images -->
